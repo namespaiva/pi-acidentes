@@ -1,0 +1,9 @@
+streamlit
+plotly
+pandas
+streamlit_folium
+folium
+datetime
+branca
+pydeck
+numpy
