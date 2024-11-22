@@ -45,19 +45,19 @@ df = load_data()
 
 with st.expander('Sobre'):
     st.markdown('''
-            Dados de acidentes em Santos de 2015 a 2024. A partir de 2018 a quantidade de dados 
+            Dados de acidentes em Santos de 2015 a 2024. Depois de 2017 a quantidade de dados 
             anuais cai drasticamente, por isso o ano inicial padrão é 2018. 
 
             Muitos acidentes aconteceram no mesmo endereço/cruzamento, por isso os pontos ficam 
             sobrepostos no mapa. Recomendo usar (clicar) a legenda do próprio gráfico para ocultar 
             alguns pontos e ver quais estão acima de quais, ou usar o seletor do mapa.
 
-            A ordem das ruas no cruzamento importa. Rua A x B vai mostrar resultados diferentes de 
-            rua B x A.
-
             A legenda do mapa oculta os pontos apenas visualmente, ou seja, eles ainda aparecerão
             na tabela de dados. Para evitar isso, selecione a gravidade desejada no filtro de gravidade. 
             
+            A ordem das ruas no cruzamento importa. Rua A x B vai mostrar resultados diferentes de 
+            rua B x A.
+
             Os filtros já estão razoavelmente dinâmicos, mas alguns acabam limpando as seleções 
             anteriores.
 
@@ -205,7 +205,7 @@ fig.update_layout(
     showlegend=True
 )
 
-tabScatter, tabHeat, tabGraphs = st.tabs(['Mapa de Pontos', 'Mapa de Calor','Gráficos'])
+tabScatter, tabHeat, tabGraphs = st.tabs(['Mapa de Pontos', 'Mapas de Calor','Gráficos'])
 
 # Visualização
 with tabScatter:
@@ -237,18 +237,43 @@ with tabScatter:
             st.write('Contagem: ', df_filtered.shape[0])
 
 with tabHeat:
-    tl = folium.TileLayer(
-        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-        attr='<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains='abcd',
-        maxZoom=20,
-        control=False)
+    linhaF = st.columns([1])
+    with linhaF[0]:
+        m = folium.Map(location=[-23.959, -46.332], zoom_start=13)
 
-    m = folium.Map(location=[-23.959, -46.332], zoom_start=13, tiles=tl)
+        heat_data = [[row['lat'], row['lon']] for index, row in df.iterrows()]
+        HeatMap(heat_data, radius=13,control=False).add_to(m)
+        heat = st_folium(m, use_container_width=True, height=500)
 
-    heat_data = [[row['lat'], row['lon']] for index, row in df.iterrows()]
-    HeatMap(heat_data, radius=15,control=False).add_to(m)
-    heat = st_folium(m)
+    linhaP = st.columns([1])
+    with linhaP[0]:
+        chart = st.pydeck_chart(
+            pdk.Deck(
+                map_style='light',
+                initial_view_state=pdk.ViewState(
+                    latitude=-23.959,
+                    longitude=-46.342,
+                    zoom=11,
+                    pitch=50
+                ),
+                layers=[
+                    pdk.Layer(
+                        "HexagonLayer",
+                        data=df,
+                        get_position="[lon, lat]",
+                        radius=70,
+                        elevation_scale=2,
+                        auto_highlight=True,
+                        elevation_range=[0, 1000],
+                        upperPercentile=99,
+                        #lowerPercentile=1,
+                        pickable=True,
+                        extruded=True,
+                        material=True
+                        )
+                    ],
+                )
+            )
 
 with tabGraphs:
     
@@ -319,8 +344,50 @@ with tabGraphs:
         showlegend=True
     )
     st.plotly_chart(histogram_fig, use_container_width=True)
+    
+    linha3 = st.columns([1])
 
-    linha3 = st.columns([1,1])
+    df['Mês'] = df['data_hora'].dt.month
+    count_month = df.groupby('Mês').size().reset_index(name='Contagem')
+    all_months = pd.DataFrame({'Mês': range(1, 13)})
+    count_month = all_months.merge(count_month, on='Mês', how='left').fillna(0)
+    figMonth = px.bar(
+        count_month, 
+        x='Mês', 
+        y='Contagem', 
+        title="Contagem de Acidentes por Mês")
+    figMonth.update_layout(
+        xaxis_title="Mês", 
+        yaxis_title="Contagem de Acidentes",
+        xaxis=dict(
+            tickmode='array',
+            tickvals=list(range(1, 13)),
+            ticktext=[
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 
+                'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                ]
+            )
+    )
+    linha3[0].plotly_chart(figMonth)
+
+    linha4 = st.columns([1])
+
+    df['Ano'] = df['data_hora'].dt.year
+    count_year = df.groupby('Ano').size().reset_index(name='Contagem')
+    all_years = pd.DataFrame({'Ano': df['Ano'].unique()})
+    count_year = all_years.merge(count_year, on='Ano', how='left').fillna(0)
+    figYear = px.bar(
+        count_year, 
+        x='Ano', 
+        y='Contagem', 
+        title="Contagem de Acidentes por Ano")
+    figYear.update_layout(
+        xaxis_title="Ano", 
+        yaxis_title="Contagem de Acidentes"
+        )
+    linha4[0].plotly_chart(figYear)
+
+    linha5 = st.columns([1,1])
     df['dia'] = pd.to_datetime(df['data_hora']).dt.date
     df['data_hora'] = pd.to_datetime(df['data_hora'])
 
@@ -330,7 +397,7 @@ with tabGraphs:
     area_fig = px.area(monthly_counts,
                     x='Mês',
                     y='Contagem',
-                    title='Contagem de Acidentes por Mês')
+                    title='Contagem de Acidentes ao longo do tempo')
 
     area_fig.update_layout(
         xaxis_title='Mês',
@@ -338,7 +405,7 @@ with tabGraphs:
         showlegend=True
     )
 
-    linha3[0].plotly_chart(area_fig, use_container_width=True)
+    linha5[0].plotly_chart(area_fig, use_container_width=True)
 
     df['Semana'] = df['data_hora'].dt.to_period('W').apply(lambda r: r.start_time)
     weekly_counts = df.groupby('Semana').size().reset_index(name='Contagem')
@@ -354,4 +421,4 @@ with tabGraphs:
         showlegend=True
     )
 
-    linha3[1].plotly_chart(area_fig, use_container_width=True)
+    linha5[1].plotly_chart(area_fig, use_container_width=True)
