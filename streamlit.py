@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import folium
-from streamlit_folium import st_folium
-from folium.plugins import HeatMap
 import plotly.express as px
 import plotly.graph_objects as go
 import pydeck as pdk
@@ -45,19 +42,19 @@ df = load_data()
 
 with st.expander('Sobre'):
     st.markdown('''
-            Dados de acidentes em Santos de 2015 a 2024. Depois de 2017 a quantidade de dados 
+            Dados de acidentes em Santos de 2015 a 2024. A partir de 2018 a quantidade de dados 
             anuais cai drasticamente, por isso o ano inicial padrão é 2018. 
 
             Muitos acidentes aconteceram no mesmo endereço/cruzamento, por isso os pontos ficam 
             sobrepostos no mapa. Recomendo usar (clicar) a legenda do próprio gráfico para ocultar 
             alguns pontos e ver quais estão acima de quais, ou usar o seletor do mapa.
 
-            A legenda do mapa oculta os pontos apenas visualmente, ou seja, eles ainda aparecerão
-            na tabela de dados. Para evitar isso, selecione a gravidade desejada no filtro de gravidade. 
-            
             A ordem das ruas no cruzamento importa. Rua A x B vai mostrar resultados diferentes de 
             rua B x A.
 
+            A legenda do mapa oculta os pontos apenas visualmente, ou seja, eles ainda aparecerão
+            na tabela de dados. Para evitar isso, selecione a gravidade desejada no filtro de gravidade. 
+            
             Os filtros já estão razoavelmente dinâmicos, mas alguns acabam limpando as seleções 
             anteriores.
 
@@ -205,7 +202,7 @@ fig.update_layout(
     showlegend=True
 )
 
-tabScatter, tabHeat, tabGraphs = st.tabs(['Mapa de Pontos', 'Mapas de Calor','Gráficos'])
+tabScatter, tabHeat, tabGraphs = st.tabs(['Mapa de Pontos', 'Mapa de Calor','Gráficos'])
 
 # Visualização
 with tabScatter:
@@ -237,16 +234,8 @@ with tabScatter:
             st.write('Contagem: ', df_filtered.shape[0])
 
 with tabHeat:
-    linhaF = st.columns([1])
-    with linhaF[0]:
-        m = folium.Map(location=[-23.959, -46.332], zoom_start=13)
-
-        heat_data = [[row['lat'], row['lon']] for index, row in df.iterrows()]
-        HeatMap(heat_data, radius=13,control=False).add_to(m)
-        heat = st_folium(m, use_container_width=True, height=500)
-
-    linhaP = st.columns([1])
-    with linhaP[0]:
+    linha = st.columns([2,1])
+    with linha[0]:        
         chart = st.pydeck_chart(
             pdk.Deck(
                 map_style='light',
@@ -270,15 +259,22 @@ with tabHeat:
                         pickable=True,
                         extruded=True,
                         material=True
-                        )
-                    ],
-                )
+                    )
+                ],
             )
+        )
+    with linha[1]:
+        st.write("Dados")
+        st.dataframe(df, hide_index=True,
+                        column_order=['data_hora','dia_semana','logradouro','numero',
+                                    'cruzamento','tipo_acidente','gravidade','tempo'])
+        st.write('Contagem: ', df.shape[0])
 
 with tabGraphs:
     
-    linha1 = st.columns([2,1]) 
-    linha2 = st.columns([2,1]) 
+    linha1 = st.columns([1]) 
+    linha2 = st.columns([1])
+    linhaPizza = st.columns([2,2,3])
 
     dflogs = df['logradouro'].value_counts().head(10).reset_index()
     dflogs.columns = ['Logradouro', 'Contagem']
@@ -292,13 +288,6 @@ with tabGraphs:
         yaxis_title="Logradouro",
         yaxis_tickfont=dict(size=10)) 
     graphLog = linha1[0].plotly_chart(figlog)
-
-    gravidade_counts = df['gravidade'].value_counts().reset_index()
-    gravidade_counts.columns = ['Gravidade', 'Contagem']
-
-    figgrav = px.pie(gravidade_counts,names='Gravidade',values='Contagem', title='Distribuição de Gravidade')
-
-    graphGrav = linha1[1].plotly_chart(figgrav)
 
     df_crossings = df.dropna(subset=['cruzamento'])
 
@@ -317,12 +306,6 @@ with tabGraphs:
     )
 
     linha2[0].plotly_chart(figcruz)
-
-    tempo_counts = df['tempo'].value_counts().reset_index()
-    tempo_counts.columns = ['Tempo', 'Contagem']
-    figtempo = px.pie(tempo_counts,names='Tempo',values='Contagem', title='Condições Climáticas')
-
-    linha2[1].plotly_chart(figtempo)
 
     df['hora'] = pd.to_datetime(df['data_hora']).dt.floor('30T').dt.time
     hora_counts = df['hora'].value_counts().reset_index()
@@ -344,50 +327,27 @@ with tabGraphs:
         showlegend=True
     )
     st.plotly_chart(histogram_fig, use_container_width=True)
-    
-    linha3 = st.columns([1])
 
-    df['Mês'] = df['data_hora'].dt.month
-    count_month = df.groupby('Mês').size().reset_index(name='Contagem')
-    all_months = pd.DataFrame({'Mês': range(1, 13)})
-    count_month = all_months.merge(count_month, on='Mês', how='left').fillna(0)
-    figMonth = px.bar(
-        count_month, 
-        x='Mês', 
-        y='Contagem', 
-        title="Contagem de Acidentes por Mês")
-    figMonth.update_layout(
-        xaxis_title="Mês", 
-        yaxis_title="Contagem de Acidentes",
-        xaxis=dict(
-            tickmode='array',
-            tickvals=list(range(1, 13)),
-            ticktext=[
-                'Janeiro', 'Fevereiro', 'Março', 'Abril', 
-                'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-                ]
-            )
-    )
-    linha3[0].plotly_chart(figMonth)
+    gravidade_counts = df['gravidade'].value_counts().reset_index()
+    gravidade_counts.columns = ['Gravidade', 'Contagem']
 
-    linha4 = st.columns([1])
+    figgrav = px.pie(gravidade_counts,names='Gravidade',values='Contagem', title='Distribuição de Gravidade')
 
-    df['Ano'] = df['data_hora'].dt.year
-    count_year = df.groupby('Ano').size().reset_index(name='Contagem')
-    all_years = pd.DataFrame({'Ano': df['Ano'].unique()})
-    count_year = all_years.merge(count_year, on='Ano', how='left').fillna(0)
-    figYear = px.bar(
-        count_year, 
-        x='Ano', 
-        y='Contagem', 
-        title="Contagem de Acidentes por Ano")
-    figYear.update_layout(
-        xaxis_title="Ano", 
-        yaxis_title="Contagem de Acidentes"
-        )
-    linha4[0].plotly_chart(figYear)
+    linhaPizza[0].plotly_chart(figgrav)
 
-    linha5 = st.columns([1,1])
+    tipo_counts = df['tipo_acidente'].value_counts().reset_index()
+    tipo_counts.columns = ['Tipo', 'Contagem']
+    figtipo = px.pie(tipo_counts,names='Tipo',values='Contagem', title='Tipos de Acidente')
+
+    linhaPizza[2].plotly_chart(figtipo)
+
+    tempo_counts = df['tempo'].value_counts().reset_index()
+    tempo_counts.columns = ['Tempo', 'Contagem']
+    figtempo = px.pie(tempo_counts,names='Tempo',values='Contagem', title='Condições Climáticas')
+
+    linhaPizza[1].plotly_chart(figtempo)
+
+    linha3 = st.columns([1,1])
     df['dia'] = pd.to_datetime(df['data_hora']).dt.date
     df['data_hora'] = pd.to_datetime(df['data_hora'])
 
@@ -397,7 +357,7 @@ with tabGraphs:
     area_fig = px.area(monthly_counts,
                     x='Mês',
                     y='Contagem',
-                    title='Contagem de Acidentes ao longo do tempo')
+                    title='Contagem de Acidentes por Mês')
 
     area_fig.update_layout(
         xaxis_title='Mês',
@@ -405,7 +365,7 @@ with tabGraphs:
         showlegend=True
     )
 
-    linha5[0].plotly_chart(area_fig, use_container_width=True)
+    linha3[0].plotly_chart(area_fig, use_container_width=True)
 
     df['Semana'] = df['data_hora'].dt.to_period('W').apply(lambda r: r.start_time)
     weekly_counts = df.groupby('Semana').size().reset_index(name='Contagem')
@@ -421,4 +381,4 @@ with tabGraphs:
         showlegend=True
     )
 
-    linha5[1].plotly_chart(area_fig, use_container_width=True)
+    linha3[1].plotly_chart(area_fig, use_container_width=True)
