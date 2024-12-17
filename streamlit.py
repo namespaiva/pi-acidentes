@@ -10,7 +10,7 @@ st.title("Dados de Acidentes")
 
 @st.cache_data
 def load_data():
-    dados = pd.read_csv("acidentes.csv")
+    dados = pd.read_csv("dados/acidentes.csv")
 
     dados.sort_values(by=['data', 'hora'], inplace=True)
     dados.reset_index(drop=True, inplace=True)
