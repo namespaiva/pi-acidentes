@@ -10,7 +10,7 @@ st.title("Dados de Acidentes")
 
 @st.cache_data
 def load_data():
-    dados = pd.read_csv("acidentes.csv")
+    dados = pd.read_csv("dados/acidentes.csv")
 
     dados.sort_values(by=['data', 'hora'], inplace=True)
     dados.reset_index(drop=True, inplace=True)
@@ -274,7 +274,7 @@ with tabGraphs:
     
     linha1 = st.columns([1]) 
     linha2 = st.columns([1])
-    linhaPizza = st.columns([2,2,3])
+    
 
     dflogs = df['logradouro'].value_counts().head(10).reset_index()
     dflogs.columns = ['Logradouro', 'Contagem']
@@ -307,26 +307,7 @@ with tabGraphs:
 
     linha2[0].plotly_chart(figcruz)
 
-    df['hora'] = pd.to_datetime(df['data_hora']).dt.floor('30T').dt.time
-    hora_counts = df['hora'].value_counts().reset_index()
-    hora_counts.columns = ['Horário', 'Contagem']
-    hora_counts = hora_counts.sort_values(by='Horário')
-    hora_counts['Horário'] = hora_counts['Horário'].astype(str)
-
-    histogram_fig = px.histogram(hora_counts,
-                                 x='Horário',
-                                 y='Contagem',
-                                 title='Histograma de Contagem de Acidentes por Horário',
-                                 nbins=24
-                                )
-
-    histogram_fig.update_layout(
-        xaxis_title='Horário',
-        yaxis_title='Contagem',
-        xaxis_tickangle=-45,
-        showlegend=True
-    )
-    st.plotly_chart(histogram_fig, use_container_width=True)
+    linhaPizza = st.columns([2,2,3])
 
     gravidade_counts = df['gravidade'].value_counts().reset_index()
     gravidade_counts.columns = ['Gravidade', 'Contagem']
@@ -347,9 +328,77 @@ with tabGraphs:
 
     linhaPizza[1].plotly_chart(figtempo)
 
-    linha3 = st.columns([1,1])
-    df['dia'] = pd.to_datetime(df['data_hora']).dt.date
+    df['hora'] = pd.to_datetime(df['data_hora']).dt.floor('30T').dt.time
+    hora_counts = df['hora'].value_counts().reset_index()
+    hora_counts.columns = ['Horário', 'Contagem']
+    hora_counts = hora_counts.sort_values(by='Horário')
+    hora_counts['Horário'] = hora_counts['Horário'].astype(str)
+
+    histogram_fig = px.histogram(hora_counts,
+                                 x='Horário',
+                                 y='Contagem',
+                                 title='Histograma de Contagem de Acidentes por Horário',
+                                 nbins=24
+                                )
+
+    histogram_fig.update_layout(
+        xaxis_title='Horário',
+        yaxis_title='Contagem',
+        xaxis_tickangle=-45,
+        showlegend=True
+    )
+    st.plotly_chart(histogram_fig, use_container_width=True)
+    
+    linha3 = st.columns([1])
+    df['Dia'] = df['dia_semana']
+    count_semana = df.groupby('Dia').size().reset_index(name='Contagem')
+    all_months = pd.DataFrame({'Dia': range(1, 8)})
+    count_semana = all_months.merge(count_semana, on='Dia', how='left').fillna(0)
+    figSemana = px.bar(
+        count_semana, 
+        x='Dia', 
+        y='Contagem', 
+        title="Contagem de Acidentes por Dia da Semana")
+    figSemana.update_layout(
+        xaxis_title="Dia da Semana", 
+        yaxis_title="Contagem",
+        xaxis=dict(
+            tickmode='array',
+            tickvals=list(range(1, 8)),
+            ticktext=[
+                'Domingo', 'Segunda', 'Terça', 'Quarta', 
+                'Quinta', 'Sexta', 'Sábado'
+                ]
+            ))
+    linha3[0].plotly_chart(figSemana)
+
+    linha4 = st.columns([1])
     df['data_hora'] = pd.to_datetime(df['data_hora'])
+    df['Mês'] = df['data_hora'].dt.month
+    count_month = df.groupby('Mês').size().reset_index(name='Contagem')
+    all_months = pd.DataFrame({'Mês': range(1, 13)})
+    count_month = all_months.merge(count_month, on='Mês', how='left').fillna(0)
+    figMonth = px.bar(
+        count_month, 
+        x='Mês', 
+        y='Contagem', 
+        title="Contagem de Acidentes por Mês")
+    figMonth.update_layout(
+        xaxis_title="Data", 
+        yaxis_title="Contagem",
+        xaxis=dict(
+            tickmode='array',
+            tickvals=list(range(1, 13)),
+            ticktext=[
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 
+                'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                ]
+            )
+    )
+    linha4[0].plotly_chart(figMonth)
+
+    linha5 = st.columns([1,1])
+    df['dia'] = pd.to_datetime(df['data_hora']).dt.date
 
     monthly_counts = df.groupby(pd.Grouper(key='data_hora', freq='M')).size().reset_index(name='Contagem')
     monthly_counts['Mês'] = monthly_counts['data_hora'].astype(str)
@@ -357,7 +406,7 @@ with tabGraphs:
     area_fig = px.area(monthly_counts,
                     x='Mês',
                     y='Contagem',
-                    title='Contagem de Acidentes por Mês')
+                    title='Contagem de Acidentes ao longo dos meses')
 
     area_fig.update_layout(
         xaxis_title='Mês',
@@ -365,7 +414,7 @@ with tabGraphs:
         showlegend=True
     )
 
-    linha3[0].plotly_chart(area_fig, use_container_width=True)
+    linha5[0].plotly_chart(area_fig, use_container_width=True)
 
     df['Semana'] = df['data_hora'].dt.to_period('W').apply(lambda r: r.start_time)
     weekly_counts = df.groupby('Semana').size().reset_index(name='Contagem')
@@ -381,4 +430,4 @@ with tabGraphs:
         showlegend=True
     )
 
-    linha3[1].plotly_chart(area_fig, use_container_width=True)
+    linha5[1].plotly_chart(area_fig, use_container_width=True)
