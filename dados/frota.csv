@@ -1,0 +1,397 @@
+Ano,Veículo,Contagem
+2006,Total,190886
+2006,Automóvel,117747
+2006,Bonde,0
+2006,Caminhão,4245
+2006,Caminhão trator,2334
+2006,Caminhonete,5106
+2006,Camioneta,7687
+2006,Chassi plataforma,2
+2006,Ciclomotor,175
+2006,Micro-ônibus,639
+2006,Motocicleta,31181
+2006,Motoneta,12943
+2006,Ônibus,606
+2006,Quadriciclo,2
+2006,Reboque,1627
+2006,Semi-reboque,5506
+2006,Sidecar,17
+2006,Trator de esteira,2
+2006,Trator de rodas,751
+2006,Triciclo,2
+2006,Utilitário,309
+2006,Outros,5
+2007,Total,204162
+2007,Automóvel,122796
+2007,Bonde,0
+2007,Caminhão,4488
+2007,Caminhão trator,2695
+2007,Caminhonete,6143
+2007,Camioneta,7642
+2007,Chassi plataforma,2
+2007,Ciclomotor,175
+2007,Micro-ônibus,676
+2007,Motocicleta,34939
+2007,Motoneta,15049
+2007,Ônibus,607
+2007,Quadriciclo,2
+2007,Reboque,1725
+2007,Semi-reboque,5882
+2007,Sidecar,18
+2007,Trator de esteira,2
+2007,Trator de rodas,771
+2007,Triciclo,3
+2007,Utilitário,542
+2007,Outros,5
+2008,Total,214983
+2008,Automóvel,126476
+2008,Bonde,0
+2008,Caminhão,4749
+2008,Caminhão trator,3100
+2008,Caminhonete,8159
+2008,Camioneta,6753
+2008,Chassi plataforma,7
+2008,Ciclomotor,176
+2008,Micro-ônibus,720
+2008,Motocicleta,37738
+2008,Motoneta,16445
+2008,Ônibus,684
+2008,Quadriciclo,2
+2008,Reboque,1812
+2008,Semi-reboque,6439
+2008,Sidecar,18
+2008,Trator de esteira,2
+2008,Trator de rodas,800
+2008,Triciclo,5
+2008,Utilitário,891
+2008,Outros,7
+2009,Total,226075
+2009,Automóvel,131839
+2009,Bonde,0
+2009,Caminhão,4996
+2009,Caminhão trator,3358
+2009,Caminhonete,8678
+2009,Camioneta,7581
+2009,Chassi plataforma,7
+2009,Ciclomotor,179
+2009,Micro-ônibus,756
+2009,Motocicleta,39942
+2009,Motoneta,17531
+2009,Ônibus,617
+2009,Quadriciclo,2
+2009,Reboque,1881
+2009,Semi-reboque,6674
+2009,Sidecar,18
+2009,Trator de esteira,2
+2009,Trator de rodas,816
+2009,Triciclo,13
+2009,Utilitário,1176
+2009,Outros,9
+2010,Total,238345
+2010,Automóvel,136599
+2010,Bonde,0
+2010,Caminhão,5236
+2010,Caminhão trator,3911
+2010,Caminhonete,9436
+2010,Camioneta,8745
+2010,Chassi plataforma,7
+2010,Ciclomotor,179
+2010,Micro-ônibus,787
+2010,Motocicleta,42266
+2010,Motoneta,18804
+2010,Ônibus,701
+2010,Quadriciclo,2
+2010,Reboque,1939
+2010,Semi-reboque,7355
+2010,Sidecar,18
+2010,Trator de esteira,2
+2010,Trator de rodas,838
+2010,Triciclo,16
+2010,Utilitário,1493
+2010,Outros,11
+2011,Total,250081
+2011,Automóvel,140313
+2011,Bonde,0
+2011,Caminhão,5627
+2011,Caminhão trator,4445
+2011,Caminhonete,10264
+2011,Camioneta,10202
+2011,Chassi plataforma,7
+2011,Ciclomotor,180
+2011,Micro-ônibus,850
+2011,Motocicleta,44455
+2011,Motoneta,20095
+2011,Ônibus,673
+2011,Quadriciclo,2
+2011,Reboque,1988
+2011,Semi-reboque,8083
+2011,Sidecar,16
+2011,Trator de esteira,2
+2011,Trator de rodas,877
+2011,Triciclo,18
+2011,Utilitário,1972
+2011,Outros,12
+2012,Total,259625
+2012,Automóvel,143746
+2012,Bonde,0
+2012,Caminhão,5793
+2012,Caminhão trator,4913
+2012,Caminhonete,10701
+2012,Camioneta,11314
+2012,Chassi plataforma,6
+2012,Ciclomotor,183
+2012,Micro-ônibus,860
+2012,Motocicleta,46084
+2012,Motoneta,21237
+2012,Ônibus,652
+2012,Quadriciclo,2
+2012,Reboque,2040
+2012,Semi-reboque,8788
+2012,Sidecar,17
+2012,Trator de esteira,2
+2012,Trator de rodas,884
+2012,Triciclo,36
+2012,Utilitário,2356
+2012,Outros,11
+2013,Total,266627
+2013,Automóvel,145704
+2013,Bonde,0
+2013,Caminhão,5898
+2013,Caminhão trator,5348
+2013,Caminhonete,11008
+2013,Camioneta,12401
+2013,Chassi plataforma,6
+2013,Ciclomotor,188
+2013,Micro-ônibus,885
+2013,Motocicleta,47081
+2013,Motoneta,22211
+2013,Ônibus,675
+2013,Quadriciclo,2
+2013,Reboque,2093
+2013,Semi-reboque,9334
+2013,Sidecar,17
+2013,Trator de esteira,2
+2013,Trator de rodas,883
+2013,Triciclo,40
+2013,Utilitário,2838
+2013,Outros,13
+2014,Total,269620
+2014,Automóvel,145564
+2014,Bonde,0
+2014,Caminhão,5834
+2014,Caminhão trator,5472
+2014,Caminhonete,11278
+2014,Camioneta,13000
+2014,Chassi plataforma,6
+2014,Ciclomotor,191
+2014,Micro-ônibus,969
+2014,Motocicleta,47817
+2014,Motoneta,22856
+2014,Ônibus,696
+2014,Quadriciclo,2
+2014,Reboque,2125
+2014,Semi-reboque,9630
+2014,Sidecar,17
+2014,Trator de esteira,2
+2014,Trator de rodas,887
+2014,Triciclo,39
+2014,Utilitário,3223
+2014,Outros,12
+2015,Total,271390
+2015,Automóvel,145161
+2015,Bonde,0
+2015,Caminhão,5678
+2015,Caminhão trator,5398
+2015,Caminhonete,11360
+2015,Camioneta,13234
+2015,Chassi plataforma,6
+2015,Ciclomotor,447
+2015,Micro-ônibus,986
+2015,Motocicleta,48673
+2015,Motoneta,23457
+2015,Ônibus,715
+2015,Quadriciclo,2
+2015,Reboque,2174
+2015,Semi-reboque,9622
+2015,Sidecar,17
+2015,Trator de esteira,2
+2015,Trator de rodas,881
+2015,Triciclo,41
+2015,Utilitário,3521
+2015,Outros,15
+2016,Total,271412
+2016,Automóvel,143594
+2016,Bonde,0
+2016,Caminhão,5632
+2016,Caminhão trator,5193
+2016,Caminhonete,11504
+2016,Camioneta,13701
+2016,Chassi plataforma,6
+2016,Ciclomotor,621
+2016,Micro-ônibus,992
+2016,Motocicleta,49169
+2016,Motoneta,23761
+2016,Ônibus,748
+2016,Quadriciclo,2
+2016,Reboque,2235
+2016,Semi-reboque,9557
+2016,Sidecar,17
+2016,Trator de esteira,2
+2016,Trator de rodas,901
+2016,Triciclo,38
+2016,Utilitário,3724
+2016,Outros,15
+2017,Total,272395
+2017,Automóvel,143113
+2017,Bonde,0
+2017,Caminhão,5482
+2017,Caminhão trator,5124
+2017,Caminhonete,11536
+2017,Camioneta,14012
+2017,Chassi plataforma,6
+2017,Ciclomotor,676
+2017,Micro-ônibus,952
+2017,Motocicleta,49562
+2017,Motoneta,24385
+2017,Ônibus,675
+2017,Quadriciclo,2
+2017,Reboque,2299
+2017,Semi-reboque,9587
+2017,Sidecar,17
+2017,Trator de esteira,2
+2017,Trator de rodas,894
+2017,Triciclo,43
+2017,Utilitário,4010
+2017,Outros,18
+2018,Total,275300
+2018,Automóvel,143702
+2018,Bonde,0
+2018,Caminhão,5420
+2018,Caminhão trator,5268
+2018,Caminhonete,11601
+2018,Camioneta,14635
+2018,Chassi plataforma,3
+2018,Ciclomotor,714
+2018,Micro-ônibus,936
+2018,Motocicleta,50113
+2018,Motoneta,24942
+2018,Ônibus,693
+2018,Quadriciclo,2
+2018,Reboque,2389
+2018,Semi-reboque,9581
+2018,Sidecar,17
+2018,Trator de esteira,2
+2018,Trator de rodas,904
+2018,Triciclo,41
+2018,Utilitário,4322
+2018,Outros,15
+2019,Total,277484
+2019,Automóvel,143372
+2019,Bonde,0
+2019,Caminhão,5352
+2019,Caminhão trator,5405
+2019,Caminhonete,11919
+2019,Camioneta,14692
+2019,Chassi plataforma,2
+2019,Ciclomotor,712
+2019,Micro-ônibus,935
+2019,Motocicleta,50792
+2019,Motoneta,25667
+2019,Ônibus,650
+2019,Quadriciclo,2
+2019,Reboque,2488
+2019,Semi-reboque,9743
+2019,Sidecar,17
+2019,Trator de esteira,2
+2019,Trator de rodas,915
+2019,Triciclo,51
+2019,Utilitário,4745
+2019,Outros,23
+2020,Total,278459
+2020,Automóvel,142348
+2020,Bonde,0
+2020,Caminhão,5270
+2020,Caminhão trator,5376
+2020,Caminhonete,12127
+2020,Camioneta,14651
+2020,Chassi plataforma,1
+2020,Ciclomotor,722
+2020,Micro-ônibus,942
+2020,Motocicleta,51416
+2020,Motoneta,26285
+2020,Ônibus,659
+2020,Quadriciclo,1
+2020,Reboque,2576
+2020,Semi-reboque,9910
+2020,Sidecar,17
+2020,Trator de esteira,2
+2020,Trator de rodas,927
+2020,Triciclo,63
+2020,Utilitário,5140
+2020,Outros,26
+2021,Total,279003
+2021,Automóvel,140162
+2021,Bonde,0
+2021,Caminhão,5178
+2021,Caminhão trator,5544
+2021,Caminhonete,12333
+2021,Camioneta,14705
+2021,Chassi plataforma,1
+2021,Ciclomotor,725
+2021,Micro-ônibus,902
+2021,Motocicleta,51729
+2021,Motoneta,27343
+2021,Ônibus,809
+2021,Quadriciclo,1
+2021,Reboque,2699
+2021,Semi-reboque,10127
+2021,Sidecar,17
+2021,Trator de esteira,2
+2021,Trator de rodas,932
+2021,Triciclo,67
+2021,Utilitário,5695
+2021,Outros,32
+2022,Total,281536
+2022,Automóvel,139221
+2022,Bonde,0
+2022,Caminhão,5204
+2022,Caminhão trator,5703
+2022,Caminhonete,12618
+2022,Camioneta,15195
+2022,Chassi plataforma,1
+2022,Ciclomotor,750
+2022,Micro-ônibus,869
+2022,Motocicleta,52274
+2022,Motoneta,28366
+2022,Ônibus,915
+2022,Quadriciclo,1
+2022,Reboque,2792
+2022,Semi-reboque,10387
+2022,Sidecar,17
+2022,Trator de esteira,2
+2022,Trator de rodas,941
+2022,Triciclo,69
+2022,Utilitário,6173
+2022,Outros,38
+2023,Total,284562
+2023,Automóvel,139362
+2023,Bonde,0
+2023,Caminhão,5197
+2023,Caminhão trator,5579
+2023,Caminhonete,12905
+2023,Camioneta,15581
+2023,Chassi plataforma,1
+2023,Ciclomotor,780
+2023,Micro-ônibus,882
+2023,Motocicleta,53007
+2023,Motoneta,29403
+2023,Ônibus,892
+2023,Quadriciclo,1
+2023,Reboque,2912
+2023,Semi-reboque,10325
+2023,Sidecar,17
+2023,Trator de esteira,2
+2023,Trator de rodas,952
+2023,Triciclo,72
+2023,Utilitário,6646
+2023,Outros,46

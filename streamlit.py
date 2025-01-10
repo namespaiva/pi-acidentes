@@ -24,21 +24,31 @@ def load_data():
     return dados
 
 @st.cache_data
+def load_frota():
+    frota = pd.read_csv("dados/frota.csv")
+    frota['Ano'] = pd.to_datetime(frota['Ano'], format='%Y')
+    frota = frota[frota['Veículo'] != 'Total']
+    return frota
+
+@st.cache_data
 def apply_filters(df, filters):
     for filter_value, column in filters:
         if filter_value: 
             if column == 'data_hora': 
                 start, finish = filter_value
-                df = df[(df['data_hora'] >= start) & (df['data_hora'] <= finish)]
+                if all(col in df.columns for col in ['Ano', 'Veículo', 'Contagem']):
+                    df = df[(df['Ano'].dt.year >= start.year) & (df['Ano'].dt.year <= finish.year)]
+                else:
+                    df = df[(df['data_hora'] >= start) & (df['data_hora'] <= finish)]
             elif isinstance(filter_value, list):  # Para mais de um valor (multiselect)
                 df = df[df[column].isin(filter_value)]
             else:  # Para só um valor (selectbox)
-                df = df[df[column] == filter_value]
-    
+                df = df[df[column] == filter_value]    
     return df
 
 # Carrega os dados
 df = load_data()
+dffrota = load_frota()
 
 with st.expander('Sobre'):
     st.markdown('''
@@ -55,9 +65,6 @@ with st.expander('Sobre'):
             A legenda do mapa oculta os pontos apenas visualmente, ou seja, eles ainda aparecerão
             na tabela de dados. Para evitar isso, selecione a gravidade desejada no filtro de gravidade. 
             
-            Os filtros já estão razoavelmente dinâmicos, mas alguns acabam limpando as seleções 
-            anteriores.
-
             Os dias da semana estão representados em números, de 1, domingo até 7, sábado.
                 ''')
 
@@ -92,8 +99,7 @@ with st.container():
     end_date = pd.to_datetime(end_date)
     filters.append(((start_date, end_date), 'data_hora'))
     df = apply_filters(df, filters)
-
-    #filters.append((ano, 'data_hora'.dt.year))
+    dffrota = apply_filters(dffrota, filters)
 
     colGrav, colTipo, colTempo = st.columns(3)
 
@@ -233,48 +239,39 @@ with tabScatter:
         else:
             st.write('Contagem: ', df_filtered.shape[0])
 
-with tabHeat:
-    linha = st.columns([2,1])
-    with linha[0]:        
-        chart = st.pydeck_chart(
-            pdk.Deck(
-                map_style='light',
-                initial_view_state=pdk.ViewState(
-                    latitude=-23.959,
-                    longitude=-46.342,
-                    zoom=11,
-                    pitch=50
-                ),
-                layers=[
-                    pdk.Layer(
-                        "HexagonLayer",
-                        data=df,
-                        get_position="[lon, lat]",
-                        radius=70,
-                        elevation_scale=2,
-                        auto_highlight=True,
-                        elevation_range=[0, 1000],
-                        upperPercentile=99,
-                        #lowerPercentile=1,
-                        pickable=True,
-                        extruded=True,
-                        material=True
-                    )
-                ],
-            )
+with tabHeat: 
+    chart = st.pydeck_chart(
+        pdk.Deck(
+            map_style='light',
+            initial_view_state=pdk.ViewState(
+                latitude=-23.959,
+                longitude=-46.342,
+                zoom=11,
+                pitch=50
+            ),
+            layers=[
+                pdk.Layer(
+                    "HexagonLayer",
+                    data=df,
+                    get_position="[lon, lat]",
+                    radius=70,
+                    elevation_scale=2,
+                    auto_highlight=True,
+                    elevation_range=[0, 1000],
+                    upperPercentile=99,
+                    #lowerPercentile=1,
+                    pickable=True,
+                    extruded=True,
+                    material=True
+                )
+            ],
         )
-    with linha[1]:
-        st.write("Dados")
-        st.dataframe(df, hide_index=True,
-                        column_order=['data_hora','dia_semana','logradouro','numero',
-                                    'cruzamento','tipo_acidente','gravidade','tempo'])
-        st.write('Contagem: ', df.shape[0])
+    )
 
 with tabGraphs:
     
     linha1 = st.columns([1]) 
     linha2 = st.columns([1])
-    
 
     dflogs = df['logradouro'].value_counts().head(10).reset_index()
     dflogs.columns = ['Logradouro', 'Contagem']
@@ -384,14 +381,15 @@ with tabGraphs:
         y='Contagem', 
         title="Contagem de Acidentes por Mês")
     figMonth.update_layout(
-        xaxis_title="Data", 
+        xaxis_title="Mês", 
         yaxis_title="Contagem",
         xaxis=dict(
             tickmode='array',
             tickvals=list(range(1, 13)),
             ticktext=[
                 'Janeiro', 'Fevereiro', 'Março', 'Abril', 
-                'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                'Maio', 'Junho', 'Julho', 'Agosto', 
+                'Setembro', 'Outubro', 'Novembro', 'Dezembro'
                 ]
             )
     )
@@ -409,7 +407,7 @@ with tabGraphs:
                     title='Contagem de Acidentes ao longo dos meses')
 
     area_fig.update_layout(
-        xaxis_title='Mês',
+        xaxis_title='Data',
         yaxis_title='Contagem',
         showlegend=True
     )
@@ -431,3 +429,44 @@ with tabGraphs:
     )
 
     linha5[1].plotly_chart(area_fig, use_container_width=True)
+
+    linha6 = st.columns([1,1])
+
+    selected_veiculos = st.multiselect(
+            label='Tipo(s) de Veículo',
+            options=dffrota['Veículo'].unique(),
+            placeholder='Escolha o(s) tipo(s) de veículo',
+            default=dffrota['Veículo'].unique()
+        )
+    filters.append((selected_veiculos, 'Veículo'))
+    dffrota = apply_filters(dffrota, filters)
+
+    linha7 = st.columns([1,2])
+
+    dffrota_counts = pd.DataFrame()
+    dffrota_counts = dffrota.groupby('Veículo')['Contagem'].sum().reset_index()
+    figfrota = px.pie(dffrota_counts,names='Veículo',values='Contagem', title='Tipos de Veículos na cidade')
+    linha7[0].plotly_chart(figfrota, use_container_width=True)
+
+    if selected_veiculos:
+        dffrota_anos = dffrota[dffrota['Veículo'].isin(selected_veiculos)]
+        dffrota_anos = dffrota_anos.groupby(['Ano', 'Veículo'])['Contagem'].sum().reset_index()
+
+        figfrota_anos = px.line(dffrota_anos,
+                        x='Ano',
+                        y='Contagem',
+                        color='Veículo',
+                        title='Contagem de Veículos por Ano')
+        figfrota_anos.update_layout(showlegend=True)
+
+        linha7[1].plotly_chart(figfrota_anos, use_container_width=True)
+    else:
+        dffrota_anos = dffrota.groupby('Ano')['Contagem'].sum().reset_index()
+
+        figfrota_anos = px.line(dffrota_anos,
+                        x='Ano',
+                        y='Contagem',
+                        title='Contagem de Veículos por Ano (Total)')
+        figfrota_anos.update_layout(showlegend=True)
+
+        linha7[1].plotly_chart(figfrota_anos, use_container_width=True)
