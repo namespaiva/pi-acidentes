@@ -1,0 +1,16 @@
+streamlit
+plotly
+pandas
+streamlit_folium
+folium
+datetime
+branca
+pydeck
+numpy
+scikit-learn
+matplotlib
+nbformat
+geopy
+requests
+xlrd
+streamlit_authenticator
