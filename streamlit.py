@@ -20,7 +20,7 @@ def load_data():
     dados['dia_semana'] = (dados['data'].dt.dayofweek)
     dias = {0: 2, 1: 3, 2: 4, 3: 5, 4: 6, 5: 7, 6: 1}
     dados['dia_semana'] = dados['dia_semana'].map(dias)
-    dados.rename(columns={'lng':'lon','data':'data_hora'}, inplace=True)
+    dados.rename(columns={'lon':'lon','data':'data_hora'}, inplace=True)
     return dados
 
 @st.cache_data
