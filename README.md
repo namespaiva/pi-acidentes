@@ -31,6 +31,8 @@ streamlit run Acidentes.py
 ```
 # Etapa 2 (acesso e geocoding)
 
+Faça o login com algum dos usuários existentes no arquivo config.yaml
+
 Para adicionar usuários, edite o arquivo congif.yaml seguindo o padrão que já está lá.
 
 Nenhuma senha está "hashada" (criptografada)
@@ -88,7 +90,8 @@ CRUZAMENTO: (texto) Rua Oswaldo Cochrane
 
 3- Verifique se os dados da tabela estão localizados corretamente. Caso não estejam, clique no local onde deveriam estar no mapa, um pop-up aparecerá com a latitude e a longitude do ponto clicado. 
 
-4- Feito isso, insira a latitude no campo "lat" e a longitude no campo "lon".
+4- Feito isso, insira a latitude no campo "lat" e a longitude no campo "lon". IMPORTANTE: certificar que os dados inseridos possuem casa decimal delimitado por . (ponto final) na terceira casa, por exemplo:
+-23.997 -46.338
 
 5- Ao terminar as correções, clique em "Atualizar Mapa" e espere alguns segundos.
 

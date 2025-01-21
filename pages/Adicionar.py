@@ -64,7 +64,7 @@ if st.session_state['authentication_status']:
                                    'lat', 'lon','types', 'bairro']]
             acidentes.to_csv("dados/acidentes2.csv", index=False)
 
-            return st.success("Acidentes adicionados com sucesso!")
+            st.success("Acidentes adicionados com sucesso!")
 
         dfgeo = pd.DataFrame()
 
@@ -210,7 +210,9 @@ if st.session_state['authentication_status']:
                 output = st_folium(mapa(st.session_state.dfgeo), height=500, width=700)
             with linha[1]:
                 st.write("Dados")
-                editor = st.data_editor(st.session_state.dfgeo, 
+                dfgeo = st.session_state.dfgeo
+                dfgeo[['lat','lon']] = dfgeo[['lat','lon']].apply(pd.to_numeric)
+                editor = st.data_editor(dfgeo, 
                                         hide_index=True, 
                                         column_order=['lat','lon','data_hora','dia_semana','logradouro',
                                                       'numero','cruzamento','tipo_acidente','gravidade',
@@ -218,7 +220,7 @@ if st.session_state['authentication_status']:
                 if st.button("Atualizar Mapa"):
                     st.session_state.dfgeo = editor
                     update_mapa()    
-            botaoC = st.button("Concatenar", on_click=concat)
+                botaoC = st.button("Concatenar", on_click=concat)
     else:
         st.title('Você não tem acesso a esta página')
 elif st.session_state['authentication_status'] is False:
