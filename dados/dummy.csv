@@ -1,6 +1,0 @@
-data,hora,tempo,tipo_acidente,gravidade,logradouro,numero,cruzamento,lat,lon,types,bairro,dia_semana
-2024-31-12,01:03:00,BOM,COLISÃO,C/ VÍTIMAS LEVES,Rua Domingos José Martins,0,Avenida Nossa Senhora de Fátima,-23.9479714,-46.3706892,intersection,São Jorge,5
-2024-31-12,01:03:00,BOM,COLISÃO,C/ VÍTIMAS GRAVES,Rua Aureliano Coutinho,0,Rua Castro Alves,-23.9686393,-46.3169461,['intersection'],Embaré,5
-2024-31-12,01:30:00,BOM,COLISÃO,S/ LESÃO,Avenida General Francisco Glycerio,0,Praça Nenê Ferreira Martins,-23.9587149,-46.33059000000001,['intersection'],Gonzaga,5
-2024-31-12,02:00:00,BOM,COLISÃO,S/ LESÃO,Rua Bolívia,0,Rua 1º de Maio,-23.9765536,-46.3026176,['intersection'],Aparecida,5
-2024-31-12,07:30:00,BOM,CHOQUE,C/ VÍTIMAS FATAIS,Rua Torquato Dias,1947,,-23.9464928,-46.359032,['street_address'],Morro Nova Cintra,5

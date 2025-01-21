@@ -84,9 +84,11 @@ CRUZAMENTO: (texto) Rua Oswaldo Cochrane
 
 # Etapa 3 (uso da página Adicionar Acidentes)
 
-1- Primeiro, upe um arquivo .xls, como mencionado acima.
+1- Primeiro, envie um arquivo .xls, como mencionado acima. Na pasta "dados" há o arquivo dummy.xls que serve de exemplo para as funcionalidades desta página.
 
 2- Depois, clique no botão "Realizar Geocoding". Espere o mapa e a tabela aparecerem.
+Leve em consideração que o Nominatim (programinha que pega as coordenadas) tem um limite de 1 requisição por segundo.
+Então um arquivo de 2500 linhas demoraria 2500 segundos (~40 minutos) para ser processado.
 
 3- Verifique se os dados da tabela estão localizados corretamente. Caso não estejam, clique no local onde deveriam estar no mapa, um pop-up aparecerá com a latitude e a longitude do ponto clicado. 
 

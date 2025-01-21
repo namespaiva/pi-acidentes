@@ -68,7 +68,7 @@ if st.session_state['authentication_status']:
 
         dfgeo = pd.DataFrame()
 
-        def geocoding(): # Autoexplicativo
+        def geocoding(attempt=1, max_attempts=3): # Autoexplicativo
             if "df" not in st.session_state or st.session_state.df.empty:
                 st.warning("Por favor, carregue um arquivo antes de realizar o geocoding.")
                 return
@@ -81,13 +81,19 @@ if st.session_state['authentication_status']:
             for i, row in df.iterrows():
                 if row['lat'] == '':
                     try:
-                        # Montar o endereço considerando se há cruzamento
+                        # Montar o endereço considerando se há cruzamento 
+                        # (vai acarretar em erro pois o Nominatim não sabe o que é um cruzamento)
                         if pd.notna(row['cruzamento']): 
-                            address = f"{row['logradouro']} com {row['cruzamento']}, Santos, SP, Brazil"
+                            address = f"{row['logradouro']} & {row['cruzamento']}, Santos, SP, Brasil"
                         else:
-                            address = f"{row['logradouro']} {row['numero']}, Santos, SP, Brazil"
-                        
-                        location = geolocator.geocode(address)
+                            address = f"{row['logradouro']} {row['numero']}, Santos, SP, Brasil"
+
+                        # O timeout=None faz com que a requisição não expire. 
+                        # Não sei se isso causa um bloqueio por parte do Nominatim.
+                        # Leve em consideração que o Nominatim tem um limite de 1 requisição por segundo.
+                        # Então um dataset de 2500 linhas demoraria 2500 segundos (~40 minutos) para ser processado.
+
+                        location = geolocator.geocode(address, language='pt-BR', timeout=None)
                         
                         if location:
                             df.at[i, 'lat'] = location.latitude
@@ -96,13 +102,16 @@ if st.session_state['authentication_status']:
                             df.at[i, 'bairro'] = location.raw.get('address', {}).get('suburb', '')
                         else:
                             st.warning(f"Endereço não encontrado: {address}",)
-                            df.at[i, 'lat'] = '0'
-                            df.at[i, 'lon'] = '0'
+                            df.at[i, 'lat'] = ''
+                            df.at[i, 'lon'] = ''
                         
                         time.sleep(2)  # Limite de requisições (1 por segundo)
                     
                     except GeocoderTimedOut:
-                        st.warning(f"Timeout para o endereço: {address}")
+                        if attempt <= max_attempts:
+                            st.warning(f"Timeout para o endereço: {address}. Tentando novamente...")
+                            return geocoding(attempt=attempt+1)
+                        raise
 
             # Versão paga (Google Maps) (Pode resultar em coordenadas incorretas)
 
