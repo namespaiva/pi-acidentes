@@ -105,7 +105,8 @@ if st.session_state['authentication_status']:
                             df.at[i, 'lat'] = ''
                             df.at[i, 'lon'] = ''
                         
-                        time.sleep(2)  # Limite de requisições (1 por segundo)
+                        time.sleep(1.51234
+                                   )  # Limite de requisições (1 por segundo)
                     
                     except GeocoderTimedOut:
                         if attempt <= max_attempts:
@@ -147,14 +148,32 @@ if st.session_state['authentication_status']:
             st.session_state.dfgeo = dfgeo # Salva o dataframe na sessão
         
         def update_mapa():
-            m = st_folium(mapa(st.session_state.dfgeo), height=500, width=700)
             output = st.empty()
             with output:
-                output.clear()
-                output = st_folium(m, height=500, width=700)
+                #output.clear()
+                output = st_folium(mapa(st.session_state.dfgeo), height=500, width=700)
                 
+        def gerar_layers(mapa,lat,lon,logradouro,numero,cruzamento,gravidade,cor,grupo):
+            folium.Marker(
+                        location=[lat, lon],
+                        popup=(
+                            f"Logradouro: {logradouro}<br>"
+                            f"Número: {numero}<br>"
+                            f"Cruzamento: {cruzamento}<br>"
+                            f"Gravidade: {gravidade}"
+                        ),
+                        icon=folium.Icon(color=cor, icon='car-burst', prefix='fa')
+                    ).add_to(mapa).add_to(grupo)
+
         def mapa(df):
-            m = folium.Map(location=[-23.959, -46.342], zoom_start=12)
+            m = folium.Map(location=[-23.959, -46.342], zoom_start=12,)
+            
+            fgLeve = folium.FeatureGroup(name="C/ VÍTIMAS LEVES", show=True, control=True)
+            fgGrave = folium.FeatureGroup(name="C/ VÍTIMAS GRAVES", show=True, control=True)
+            fgFatal = folium.FeatureGroup(name="C/ VÍTIMAS FATAIS", show=True, control=True)
+            fgSemLesao = folium.FeatureGroup(name="S/ LESÃO", show=True, control=True)
+            folium.LayerControl().add_to(m)
+
             # Add markers for each accident
             gravidade_colors = {
                 'C/ VÍTIMAS LEVES': 'green',
@@ -162,31 +181,38 @@ if st.session_state['authentication_status']:
                 'C/ VÍTIMAS FATAIS': 'red',
                 'S/ LESÃO': 'blue'
             }
-
+        
             for _, row in df.iterrows():
                 try:
                     # Valide os valores de lat/lon
                     lat = float(row['lat'])
                     lon = float(row['lon'])
                     
+                    logradouro = row['logradouro']
+                    numero = row['numero']
+                    cruzamento = row['cruzamento']
                     gravidade = row['gravidade']
+
                     color = gravidade_colors.get(gravidade, 'gray')
 
                     # Adicione o marcador ao mapa
-                    folium.Marker(
-                        location=[lat, lon],
-                        popup=(
-                            f"Logradouro: {row['logradouro']}<br>"
-                            f"Número: {row['numero']}<br>"
-                            f"Cruzamento: {row['cruzamento']}<br>"
-                            f"Gravidade: {row['gravidade']}"
-                        ),
-                        icon=folium.Icon(color=color, icon='car-burst', prefix='fa')
-                    ).add_to(m)
+                    match gravidade:
+                        case 'C/ VÍTIMAS LEVES':
+                            gerar_layers(m,lat,lon,logradouro,numero,cruzamento,gravidade,color,fgLeve)
+                        case 'C/ VÍTIMAS GRAVES':
+                            gerar_layers(m,lat,lon,logradouro,numero,cruzamento,gravidade,color,fgGrave)
+                        case 'C/ VÍTIMAS FATAIS':
+                            gerar_layers(m,lat,lon,logradouro,numero,cruzamento,gravidade,color,fgFatal)
+                        case 'S/ LESÃO':
+                            gerar_layers(m,lat,lon,logradouro,numero,cruzamento,gravidade,color,fgSemLesao)
                 except (ValueError, TypeError):
                     # Ignore linhas com lat/lon inválidas
                     continue
 
+            m.add_child(fgLeve)
+            m.add_child(fgGrave)
+            m.add_child(fgFatal)
+            m.add_child(fgSemLesao)
             m.add_child(folium.LatLngPopup())
 
             return m
