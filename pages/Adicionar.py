@@ -273,7 +273,6 @@ if st.session_state['authentication_status']:
             with linha[0]:
                 st.write("Mapa de Acidentes por Gravidade")
                 output = st_folium(mapa(st.session_state.dfgeo), height=500, width=700)
-
             with linha[1]:
                 st.write("Dados")
                 dfgeo = st.session_state.dfgeo

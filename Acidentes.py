@@ -318,7 +318,7 @@ if st.session_state['authentication_status']:
         graphLog = linha1[0].plotly_chart(figlog)
 
         df_crossings = df.dropna(subset=['cruzamento'])
-
+        df_crossings = df_crossings.copy()
         df_crossings['logradouro_cruzamento'] = df_crossings['logradouro'] + ' x ' + df_crossings['cruzamento']
         df_top_crossings = df_crossings['logradouro_cruzamento'].value_counts().head(10).reset_index()
         df_top_crossings.columns = ['Cruzamento', 'Contagem']
@@ -356,7 +356,7 @@ if st.session_state['authentication_status']:
 
         linhaPizza[1].plotly_chart(figtempo)
 
-        df['hora'] = pd.to_datetime(df['data_hora']).dt.floor('30T').dt.time
+        df['hora'] = pd.to_datetime(df['data_hora']).dt.floor('30min').dt.time
         hora_counts = df['hora'].value_counts().reset_index()
         hora_counts.columns = ['Horário', 'Contagem']
         hora_counts = hora_counts.sort_values(by='Horário')
@@ -429,7 +429,7 @@ if st.session_state['authentication_status']:
         linha5 = st.columns([1,1])
         df['dia'] = pd.to_datetime(df['data_hora']).dt.date
 
-        monthly_counts = df.groupby(pd.Grouper(key='data_hora', freq='M')).size().reset_index(name='Contagem')
+        monthly_counts = df.groupby(pd.Grouper(key='data_hora', freq='ME')).size().reset_index(name='Contagem')
         monthly_counts['Mês'] = monthly_counts['data_hora'].astype(str)
 
         area_fig = px.area(monthly_counts,
