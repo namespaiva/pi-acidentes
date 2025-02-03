@@ -81,22 +81,25 @@ if st.session_state['authentication_status']:
     df = load_data()
     dffrota = load_frota()
 
-    with st.expander('Sobre'):
+    with st.expander('Leia-me!'):
         st.markdown('''
-                Dados de acidentes em Santos de 2015 a 2024. A partir de 2018 a quantidade de dados 
-                anuais cai drasticamente, por isso o ano inicial padrão é 2018. 
+                    Dados de acidentes em Santos de 2015 a 2024. A partir de 2018 a quantidade de dados 
+                    anuais cai drasticamente, por isso o ano inicial padrão é 2018. 
+                    
+                    Por padrão o mapa abre no modo de seleção, para movê-lo, passe o mouse por cima dele e
+                    clique no ícone na parte superior direita.
 
-                Muitos acidentes aconteceram no mesmo endereço/cruzamento, por isso os pontos ficam 
-                sobrepostos no mapa. Recomendo usar (clicar) a legenda do próprio gráfico para ocultar 
-                alguns pontos e ver quais estão acima de quais, ou usar o seletor do mapa.
+                    Muitos acidentes aconteceram no mesmo endereço/cruzamento, por isso os pontos ficam 
+                    sobrepostos no mapa. Recomendo usar (clicar) a legenda do próprio gráfico para ocultar 
+                    alguns pontos e ver quais estão acima de quais, ou usar o seletor do mapa.
 
-                A ordem das ruas no cruzamento importa. Rua A x B vai mostrar resultados diferentes de 
-                rua B x A.
+                    A ordem das ruas no cruzamento importa. Rua A x B vai mostrar resultados diferentes de 
+                    rua B x A.
 
-                A legenda do mapa oculta os pontos apenas visualmente, ou seja, eles ainda aparecerão
-                na tabela de dados. Para evitar isso, selecione a gravidade desejada no filtro de gravidade. 
-                
-                Os dias da semana estão representados em números, de 1, domingo até 7, sábado.
+                    A legenda do mapa oculta os pontos apenas visualmente, ou seja, eles ainda aparecerão
+                    na tabela de dados. Para evitar isso, selecione a gravidade desejada no filtro de gravidade. 
+                    
+                    Os dias da semana estão representados em números, de 1, domingo até 7, sábado.
                     ''')
 
     # Filtros
@@ -469,8 +472,9 @@ if st.session_state['authentication_status']:
                 placeholder='Escolha o(s) tipo(s) de veículo',
                 default=dffrota['Veículo'].unique()
             )
-        filters.append((selected_veiculos, 'Veículo'))
-        dffrota = apply_filters(dffrota, filters)
+        filtersfrota = []
+        filtersfrota.append((selected_veiculos, 'Veículo'))
+        dffrota = apply_filters(dffrota, filtersfrota)
 
         linha7 = st.columns([1,2])
 
