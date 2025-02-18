@@ -30,25 +30,31 @@ def load_frota():
     frota = frota[frota['Veículo'] != 'Total']
     return frota
 
+# Carrega os dados
+df = load_data()
+dffrota = load_frota()
+
 @st.cache_data
 def apply_filters(df, filters):
     for filter_value, column in filters:
         if filter_value: 
-            if column == 'data_hora': 
+            if column == 'data_hora':  # Para datas
                 start, finish = filter_value
                 if all(col in df.columns for col in ['Ano', 'Veículo', 'Contagem']):
                     df = df[(df['Ano'].dt.year >= start.year) & (df['Ano'].dt.year <= finish.year)]
                 else:
                     df = df[(df['data_hora'] >= start) & (df['data_hora'] <= finish)]
             elif isinstance(filter_value, list):  # Para mais de um valor (multiselect)
-                df = df[df[column].isin(filter_value)]
+                if all(col in df.columns for col in ['Ano', 'Veículo', 'Contagem']):
+                    df = df[df[column].isin(filter_value)]
+                else:
+                    df = df[df[column].isin(filter_value)]
             else:  # Para só um valor (selectbox)
-                df = df[df[column] == filter_value]    
+                if all(col in df.columns for col in ['Ano', 'Veículo', 'Contagem']):
+                    df = df[df[column] == filter_value]
+                else:
+                    df = df[df[column] == filter_value]    
     return df
-
-# Carrega os dados
-df = load_data()
-dffrota = load_frota()
 
 with st.expander('Sobre'):
     st.markdown('''
@@ -432,14 +438,16 @@ with tabGraphs:
 
     linha6 = st.columns([1,1])
 
+    filters_frota = []
+
     selected_veiculos = st.multiselect(
             label='Tipo(s) de Veículo',
             options=dffrota['Veículo'].unique(),
             placeholder='Escolha o(s) tipo(s) de veículo',
             default=dffrota['Veículo'].unique()
         )
-    filters.append((selected_veiculos, 'Veículo'))
-    dffrota = apply_filters(dffrota, filters)
+    filters_frota.append((selected_veiculos, 'Veículo'))
+    dffrota = apply_filters(dffrota, filters_frota)
 
     linha7 = st.columns([1,2])
 
