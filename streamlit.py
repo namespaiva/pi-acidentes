@@ -331,7 +331,7 @@ with tabGraphs:
 
     linhaPizza[1].plotly_chart(figtempo)
 
-    df['hora'] = pd.to_datetime(df['data_hora']).dt.floor('30T').dt.time
+    df['hora'] = pd.to_datetime(df['data_hora']).dt.floor('30min').dt.time
     hora_counts = df['hora'].value_counts().reset_index()
     hora_counts.columns = ['Horário', 'Contagem']
     hora_counts = hora_counts.sort_values(by='Horário')
@@ -404,7 +404,7 @@ with tabGraphs:
     linha5 = st.columns([1,1])
     df['dia'] = pd.to_datetime(df['data_hora']).dt.date
 
-    monthly_counts = df.groupby(pd.Grouper(key='data_hora', freq='M')).size().reset_index(name='Contagem')
+    monthly_counts = df.groupby(pd.Grouper(key='data_hora', freq='ME')).size().reset_index(name='Contagem')
     monthly_counts['Mês'] = monthly_counts['data_hora'].astype(str)
 
     area_fig = px.area(monthly_counts,
