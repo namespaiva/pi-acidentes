@@ -129,7 +129,7 @@ with st.container():
 
     with colTempo:
         selected_tempo = st.multiselect(
-            label='Tempo(s)',
+            label='Condições Climáticas',
             options=df['tempo'].unique(),
             placeholder='Escolha o(s) tempo(s)'
         )
