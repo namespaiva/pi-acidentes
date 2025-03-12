@@ -13,3 +13,7 @@ nbformat
 pytensor
 pymc
 arviz
+geopy
+requests
+xlrd
+streamlit_authenticator
