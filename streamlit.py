@@ -131,7 +131,7 @@ with st.container():
         selected_tempo = st.multiselect(
             label='Condições Climáticas',
             options=df['tempo'].unique(),
-            placeholder='Escolha o(s) tempo(s)'
+            placeholder='Escolha a(s) Condição(ões)'
         )
         filters.append((selected_tempo, 'tempo'))
         df = apply_filters(df, filters)
