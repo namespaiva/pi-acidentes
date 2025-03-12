@@ -1,39 +1,104 @@
-# Análise de Dados dos Acidentes de Trânsito no município de Santos: Tendências e Características  
+# Como instalar e rodar o projeto
 
-Um estudo sobre acidentes veiculares no município de Santos.  
+# Etapa 1 (no terminal)
 
-## Produzido em Parceria com a CET Santos  
+```bash
+# Passo 1: Navegue até o diretório do projeto
+cd localdoprojeto
 
-Por:  
-- João Pedro Paiva Cardoso  
-- Diego Brunetto da Silva  
-- Marcos Paulo Sousa Santos  
-- Pedro Henrique Levy Fermino Ferreira  
+# Passo 2: Crie um ambiente virtual
+python -m venv .venv
 
-### Contexto Acadêmico  
-Este projeto foi desenvolvido para a disciplina **Projeto Integrador V** na **Fatec Baixada Santista - Rubens Lara**.  
+# Passo 3: Ative o ambiente virtual
+# Windows (CMD):
+.venv\Scripts\activate.bat
+# Windows (PowerShell):
+.venv\Scripts\Activate.ps1
+# Linux/Mac:
+source .venv/bin/activate
 
-### Aplicativo Streamlit  
-Os dados do trabalho podem ser visualizados no aplicativo do Streamlit:  
-[https://pi-acidentes.streamlit.app/](https://pi-acidentes.streamlit.app/)  
+# Passo 4: Instale as dependências
+pip install -r requirements.txt
 
----
+# Passo 5: Execute o projeto
+streamlit run Acidentes.py
 
-# Traffic Accident Data Analysis in the Municipality of Santos: Trends and Characteristics  
+# No terminal vai ter uma mensagem assim:
+#   You can now view your Streamlit app in your browser.
 
-A study on vehicle accidents in the municipality of Santos.  
+#   Local URL: http://localhost:8501
+#   Network URL: http://10.10.41.129:8501
+```
+# Etapa 2 (acesso e geocoding)
 
-## Produced in Partnership with CET Santos  
+Faça o login com algum dos usuários existentes no arquivo config.yaml
 
-By:  
-- João Pedro Paiva Cardoso  
-- Diego Brunetto da Silva  
-- Marcos Paulo Sousa Santos  
-- Pedro Henrique Levy Fermino Ferreira  
+Para adicionar usuários, edite o arquivo congif.yaml seguindo o padrão que já está lá.
 
-### Academic Context  
-This project was developed for the **Integrated Project V** course at **Fatec Baixada Santista - Rubens Lara**.  
+Nenhuma senha está "hashada" (criptografada)
 
-### Streamlit App  
-The project data can be explored using the Streamlit application:  
-[https://pi-acidentes.streamlit.app/](https://pi-acidentes.streamlit.app/)  
+A página de adicionar não está funcionando, ela serve mais como um protótipo. 
+
+O geocoder grátis não sabe o que é um cruzamento e o da Google é pago.
+
+A leitura de arquivos considera arquivos .xls com uma coluna sem cabeçalho e as colunas:
+
+DATA - HORA - TEMPO - TIPO_ACIDENTE - GRAVIDADE - LOGRADOURO - Nº - CRUZAMENTO
+
+Nessa ordem, escrito dessa exata maneira. Mudanças nas colunas implicarão em mudanças no código de tratamento.
+
+O formato dos dados deve ser (com exemplos):
+
+DATA: (dd/mm/aaaa) 01/01/24
+
+HORA: (hh/mm) 05:26
+
+TEMPO: (texto) [BOM
+                CHUVA
+                S/I
+                NEBLINA
+                ]
+
+TIPO_ACIDENTE: (texto) [COLISÃO
+                        CHOQUE
+                        ABALROAMENTO
+                        ATROPELAMENTO
+                        TOMBAMENTO
+                        NÃO IDENTIFICADO
+                        OUTROS
+                        CAPOTAMENTO
+                        ENGAVETAMENTO
+                        ]
+
+GRAVIDADE: (texto) [S/ LESÃO
+                    C/ VÍTIMAS LEVES
+                    C/ VÍTIMAS GRAVES
+                    C/ VÍTIMAS FATAIS
+                    ]
+
+LOGRADOURO: (texto) Rua Conselheiro Ribas
+
+Nº: (número inteiro) 0 
+
+CRUZAMENTO: (texto) Rua Oswaldo Cochrane
+
+# Etapa 3 (uso da página Adicionar Acidentes)
+
+1- Primeiro, envie um arquivo .xls, como mencionado acima. Na pasta "dados" há o arquivo dummy.xls que serve de exemplo para as funcionalidades desta página.
+
+2- Depois, clique no botão "Realizar Geocoding". Espere o mapa e a tabela aparecerem.
+Leve em consideração que o Nominatim (programinha que pega as coordenadas) tem um limite de 1 requisição por segundo.
+Então um arquivo de 2500 linhas demoraria 2500 segundos (~40 minutos) para ser processado.
+
+3- Verifique se os dados da tabela estão localizados corretamente. Caso não estejam, clique no local onde deveriam estar no mapa, um pop-up aparecerá com a latitude e a longitude do ponto clicado. 
+
+4- Feito isso, insira a latitude no campo "lat" e a longitude no campo "lon". IMPORTANTE: certificar que os dados inseridos possuem casa decimal delimitado por . (ponto final) na terceira casa, por exemplo:
+-23.997 -46.338
+
+5- Ao terminar as correções, clique em "Atualizar Mapa" e espere alguns segundos.
+
+6- Verifique os dados novamente. Caso ainda hajam inconsistências, repita os passos 3, 4 e 5.
+
+7- Ao finalizar, clique em "Concatenar" no fim da página. Um novo arquivo com todos os acidentes será gerado.
+
+Em caso de erros (página quebrar, mensagem vermelha, etc) recarregue a página 
